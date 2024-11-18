@@ -12,6 +12,6 @@ A simple API server for HR Management built with FastAPI.
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/deadpool-be.git
+git clone git@github.com:kodeacross/deadpool-emp-management-backend.git
 cd deadpool-be
 ```
