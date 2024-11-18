@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "deadpool-be"
+version = "0.1.0"
+description = "a simple api server for hr management"
+authors = ["sipelepis <moran.phillipjan@ue.edu.ph>"]
+readme = "README.md"
+packages = [
+    { include = "src" }
+]
+[tool.poetry.dependencies]
+python = "^3.11"
+uvicorn = "^0.32.0"
+fastapi = "^0.115.5"
+pydantic = "^2.9.2"
+requests = "^2.32.3"
+pyjwt = "^2.9.0"
+pydantic-settings = "^2.6.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
