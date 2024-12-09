@@ -5,18 +5,13 @@ from src.auth0 import AUTH0_DOMAIN, require_auth
 router = APIRouter()
 
 
-@router.get("/")
-async def get_employees():
-    return {"message": "List of employees"}
-
-
-@router.get("/all-users")
-async def get_all_users(token_payload: dict = Depends(require_auth)):
+@router.get("/all-roles")
+async def get_all_roles(token_payload: dict = Depends(require_auth)):
     """
     Fetch all users from Auth0.
     """
     try:
-        if "read:users" not in token_payload["payload"].get("scope", "").split() and "read:user_idp_tokens" not in token_payload["payload"].get("scope", "").split():
+        if "read:roles" not in token_payload["payload"].get("scope", "").split():
             raise HTTPException(
                 status_code=403,
                 detail="Insufficient permissions to read users."
@@ -28,7 +23,7 @@ async def get_all_users(token_payload: dict = Depends(require_auth)):
         }
         # Make a request to Auth0 Management API
         response = requests.get(
-            f"https://{AUTH0_DOMAIN}/api/v2/users",
+            f"https://{AUTH0_DOMAIN}/api/v2/roles",
             headers=headers,
             timeout=12
         )
@@ -47,9 +42,9 @@ async def get_all_users(token_payload: dict = Depends(require_auth)):
         )
 
 
-@router.get("/{employee_id}")
+@router.get("/{role_id}/users")
 async def get_employee(
-    employee_id: str = Path(..., title="The ID of the employee"),
+    role_id: str = Path(..., title="The ID of the employee"),
     token_payload: dict = Depends(require_auth),  # Inject the token payload
 ):
     """
@@ -69,13 +64,12 @@ async def get_employee(
         }
         # Make a request to Auth0 Management API
         response = requests.get(
-            f"https://{AUTH0_DOMAIN}/api/v2/users/{employee_id}",
+            f"https://{AUTH0_DOMAIN}/api/v2/roles/{role_id}/users",
             headers=headers,
             timeout=12
         )
         if response.status_code == 200:
             user_data = response.json()
-            user_metadata = user_data.get("user_metadata", {})
             return user_data
         else:
             raise HTTPException(
