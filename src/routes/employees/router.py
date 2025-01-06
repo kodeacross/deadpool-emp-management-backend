@@ -1,28 +1,23 @@
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, Depends, HTTPException, Path, Request
 import requests
-from src.auth0 import AUTH0_DOMAIN, require_auth
+from src.dependencies.auth0 import AUTH0_DOMAIN,  require_auth
 
 router = APIRouter()
 
 
-@router.get("/")
-async def get_employees():
-    return {"message": "List of employees"}
-
-
-@router.get("/all-users")
+@router.get("/all")
 async def get_all_users(token_payload: dict = Depends(require_auth)):
     """
     Fetch all users from Auth0.
     """
     try:
+        # return token_payload
         if "read:users" not in token_payload["payload"].get("scope", "").split() and "read:user_idp_tokens" not in token_payload["payload"].get("scope", "").split():
             raise HTTPException(
                 status_code=403,
                 detail="Insufficient permissions to read users."
             )
         headers = {
-            # 'sub' contains the client ID
             "Authorization": f"Bearer {token_payload['access_token']}",
             "Content-Type": "application/json",
         }
@@ -47,7 +42,7 @@ async def get_all_users(token_payload: dict = Depends(require_auth)):
         )
 
 
-@router.get("/{employee_id}")
+@ router.get("/{employee_id}")
 async def get_employee(
     employee_id: str = Path(..., title="The ID of the employee"),
     token_payload: dict = Depends(require_auth),  # Inject the token payload

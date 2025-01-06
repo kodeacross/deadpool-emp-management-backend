@@ -1,9 +1,9 @@
-# from src.routes.token.router import router as token_router
+from src.routes.token.router import router as token_router
 from src.routes.job_applications.router import router as job_applications_router
 from src.routes.leaves.router import router as leaves_router
 from src.routes.employees.router import router as employees_router
 from src.routes.roles.router import router as roles_Router
-from src.auth0 import require_auth
+from src.dependencies.auth0 import require_auth
 from fastapi import Depends, FastAPI
 from dotenv import load_dotenv
 
@@ -27,8 +27,8 @@ app = FastAPI(
 # )
 app.include_router(
     employees_router,
-    prefix="/employees",
-    tags=["Employees"],
+    prefix="/employee",
+    tags=["Employee"],
     dependencies=[Depends(require_auth)]
 )
 app.include_router(
