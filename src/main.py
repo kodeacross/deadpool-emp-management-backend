@@ -1,4 +1,4 @@
-from src.routes.token.router import router as token_router
+# from src.routes.token.router import router as token_router
 from src.routes.job_applications.router import router as job_applications_router
 from src.routes.leaves.router import router as leaves_router
 from src.routes.employees.router import router as employees_router
